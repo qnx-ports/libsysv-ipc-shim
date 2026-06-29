@@ -22,8 +22,8 @@ shmat(int shmid, const void* shmaddr, int shmflg)
     // Attach the header before the attach-point of the address if possible.
     //
     // FIXME: I think this will cause some unexpected outcomes around
-    // deliberately choosing a certain address to attach at. Not sure what the
-    // right fix is...
+    // deliberately choosing a certain address to attach at. Our long-term fix
+    // is to have this struct tracked in the heap of our resmgr.
     if ((size_t) addr >= sizeof(struct shmid_ds)) // Implying addr != NULL
     {
         addr -= sizeof(struct shmid_ds);
@@ -52,8 +52,8 @@ shmat(int shmid, const void* shmaddr, int shmflg)
         return SHM_FAILED;
     }
 
-    // FIXME: These must be two separate mapped addresses to have different
-    // protections.
+    // These must be two separate mapped addresses to have different
+    // protections. Leaving as is because this is only a temp solution.
 #if 0
     // The header must be read/write otherwise we can't touch shm_* attribs.
     if (shmflg == SHM_RDONLY) {
