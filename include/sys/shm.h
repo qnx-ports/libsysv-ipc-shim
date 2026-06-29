@@ -76,7 +76,7 @@ struct shmid_ds
     time_t shm_atime;         /* time of last shmat() */
     time_t shm_dtime;         /* time of last shmdt() */
     time_t shm_ctime;         /* time of last change by shmctl() */
-    const char shm_name[sizeof(MAX_QNX_SYSV_SHM_NAME)];
+    char shm_name[sizeof(MAX_QNX_SYSV_SHM_NAME)];
 };
 
 __BEGIN_DECLS
