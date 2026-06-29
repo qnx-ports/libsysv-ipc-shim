@@ -80,6 +80,7 @@ struct shmid_ds
 };
 
 __BEGIN_DECLS
+// shmflg - SHM_RDONLY is currently unsupported.
 void* shmat(int shmid, const void* shmaddr, int shmflg);
 int shmget(key_t key, size_t size, int shmflg);
 int shmctl(int shmid, int cmd, struct shmid_ds* buf);
