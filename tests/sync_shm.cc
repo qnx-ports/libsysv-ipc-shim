@@ -44,7 +44,7 @@ public:
 };
 
 TEST_F(SyncShmTest, dettach_on_normal_exit) {
-    // Create shm in a child process, which then terminates abnormally. Check if
+    // Create shm in a child process, which then terminates normally. Check if
     // the shm was dettached.
     key_t key = getpid();
     int pid = fork();
