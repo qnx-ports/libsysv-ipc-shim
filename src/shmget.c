@@ -1,4 +1,5 @@
 #define _QNX_SYSV_SHM_INTERNAL
+#include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/mman.h>
@@ -53,6 +54,13 @@ shmget(key_t key, size_t size, int shmflg)
     // keeping on creating the new shared memory
     if (ftruncate(fd, full_size) < 0)
     {
+        int save_errno = errno;
+        close(fd);
+        if (key != IPC_PRIVATE)
+        {
+            shm_unlink(name);
+        }
+        errno = save_errno;
         return -1;
     }
 
@@ -64,11 +72,13 @@ shmget(key_t key, size_t size, int shmflg)
                                    0);
     if (header == MAP_FAILED)
     {
+        int save_errno = errno;
         close(fd);
         if (key != IPC_PRIVATE)
         {
             shm_unlink(name);
         }
+        errno = save_errno;
         return -1;
     }
 
@@ -88,6 +98,8 @@ shmget(key_t key, size_t size, int shmflg)
     header->shm_atime = 0;
     header->shm_dtime = 0;
     header->shm_ctime = time(NULL);
+
+    munmap(header, full_size);
 
     return fd;
 }

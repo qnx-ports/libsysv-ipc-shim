@@ -8,4 +8,4 @@ Wrapper on top of `shm_*` to provide old SysV style ipc
 ## Guide
 If you are using clang, put headers into `/usr/include/shim`
 
-Build with `CC=clang ./build.sh`
+Build with `cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build`

@@ -32,6 +32,7 @@ shmctl(int shmid, int cmd, struct shmid_ds* buf)
         case IPC_STAT:
         {
             memcpy(buf, header, sizeof(struct shmid_ds));
+            munmap(header, sizeof(struct shmid_ds));
             return 0;
         }
         case IPC_SET:
@@ -41,18 +42,24 @@ shmctl(int shmid, int cmd, struct shmid_ds* buf)
             header->shm_perm.mode &= (~0b111111111);
             header->shm_perm.mode |= (buf->shm_perm.mode & 0b111111111);
             fchown(shmid, buf->shm_perm.uid, buf->shm_perm.gid);
-            return 0;
+            break;
         }
         case IPC_RMID:
         {
+            // FIXME: This isn't right. This should wait until the last detttach.
+            // Again, would be solved by having a resmgr.
+            const char *shm_name = header->shm_name;
             close(shmid);
-            shm_unlink(header->shm_name);
+            shm_unlink(shm_name);
+            munmap(header, sizeof(struct shmid_ds));
             return 0;
         }
+        default:
+        break;
     }
 
-    munmap(header, sizeof(struct shmid_ds));
     header->shm_lpid = getpid();
     header->shm_ctime = time(NULL);
+    munmap(header, sizeof(struct shmid_ds));
     return 0;
 }
