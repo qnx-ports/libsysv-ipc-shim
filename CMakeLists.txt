@@ -15,6 +15,9 @@ set(LIBSYSV_IPC_SOURCES src/ipc.c
 
 add_library(sysv-ipc ${LIBSYSV_IPC_SOURCES})
 target_include_directories(sysv-ipc PUBLIC include)
+set_target_properties(sysv-ipc PROPERTIES
+    PUBLIC_HEADER "include/sys/shm.h;include/sys/ipc.h"
+)
 
 if(LIBSYSV_IPC_ENABLE_INSTALL)
     install(TARGETS sysv-ipc)
