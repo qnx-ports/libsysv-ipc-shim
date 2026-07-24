@@ -20,7 +20,10 @@ set_target_properties(sysv-ipc PROPERTIES
 )
 
 if(LIBSYSV_IPC_ENABLE_INSTALL)
-    install(TARGETS sysv-ipc)
+    install(
+        TARGETS sysv-ipc
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sys
+    )
 endif()
 
 if(LIBSYSV_IPC_ENABLE_TESTING)
